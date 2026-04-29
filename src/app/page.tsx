@@ -5,7 +5,7 @@ import About from "@/components/sections/About";
 import Projects from "@/components/sections/Projects";
 import Blog from "@/components/sections/Blog";
 import Contact from "@/components/sections/Contact";
-import { projects } from "@/content/projects/example-project";
+import { projectGroups } from "@/content/projects/example-project";
 
 export default function Home() {
   return (
@@ -14,7 +14,7 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <About />
-        <Projects projects={projects} />
+        <Projects groups={projectGroups} />
         <Blog />
         <Contact />
       </main>

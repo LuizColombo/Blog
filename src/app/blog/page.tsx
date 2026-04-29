@@ -1,39 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
-import type { Post } from "@/types";
-
-const posts: Post[] = [
-  {
-    slug: "primeiros-passos-go",
-    title: "Do PHP ao Go: o que mudou na minha forma de pensar",
-    excerpt:
-      "Depois de anos escrevendo PHP, minha transição para Go trouxe insights sobre tipagem, concorrência e como estruturar sistemas que escalam.",
-    date: "28 Abr 2025",
-    readingTime: "8 min",
-    tags: ["Go", "PHP", "Arquitetura"],
-    content: "",
-  },
-  {
-    slug: "rabbitmq-laravel-na-pratica",
-    title: "RabbitMQ + Laravel na prática: padrões que funcionam",
-    excerpt:
-      "Como estruturo filas de mensagens em projetos Laravel reais, evitando os erros comuns e garantindo resiliência em produção.",
-    date: "15 Abr 2025",
-    readingTime: "12 min",
-    tags: ["Laravel", "RabbitMQ", "Queue"],
-    content: "",
-  },
-  {
-    slug: "postgresql-performance",
-    title: "Queries lentas no PostgreSQL: diagnóstico e otimização",
-    excerpt:
-      "Um guia prático sobre EXPLAIN ANALYZE, índices que valem a pena e quando desnormalizar é a resposta certa.",
-    date: "02 Abr 2025",
-    readingTime: "10 min",
-    tags: ["PostgreSQL", "Performance", "SQL"],
-    content: "",
-  },
-];
+import { posts } from "@/content/posts";
 
 export default function BlogPage() {
   return (

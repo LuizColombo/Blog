@@ -4,8 +4,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Building2, X, ZoomIn } from "lucide-react";
-import type { Project } from "@/types";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Building2,
+  X,
+  ZoomIn,
+  ExternalLink,
+} from "lucide-react";
+import type { Project, ProjectGroup } from "@/types";
+import { GitHubIcon } from "@/components/ui/BrandIcons";
 
 function Lightbox({
   screenshots,
@@ -205,7 +213,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="group grid md:grid-cols-2 gap-8 p-6 rounded-2xl bg-[#13131f] border border-[#2d2d3d] hover:border-violet-500/30 transition-all"
+      className="group grid h-full md:grid-cols-2 gap-8 p-6 rounded-lg bg-[#13131f] border border-[#2d2d3d] hover:border-violet-500/30 transition-all shadow-2xl shadow-black/20"
     >
       <ScreenshotCarousel screenshots={project.screenshots} title={project.title} />
 
@@ -247,19 +255,153 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-slate-500">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
           <span className="px-2 py-0.5 rounded border border-slate-700 text-slate-400">
             Papel: {project.role}
           </span>
+          {project.repositoryUrl && (
+            <a
+              href={project.repositoryUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-slate-700 text-slate-400 hover:text-white hover:border-violet-500/40 transition-colors"
+            >
+              <GitHubIcon size={12} />
+              GitHub
+            </a>
+          )}
+          {project.demoUrl && (
+            <a
+              href={project.demoUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-slate-700 text-slate-400 hover:text-white hover:border-violet-500/40 transition-colors"
+            >
+              <ExternalLink size={12} />
+              Demo
+            </a>
+          )}
         </div>
       </div>
     </motion.article>
   );
 }
 
-export default function Projects({ projects }: { projects: Project[] }) {
+function ProjectCarousel({ group }: { group: ProjectGroup }) {
+  const [current, setCurrent] = useState(0);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const slideRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  const goTo = useCallback(
+    (index: number) => {
+      const nextIndex = (index + group.projects.length) % group.projects.length;
+      slideRefs.current[nextIndex]?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+      setCurrent(nextIndex);
+    },
+    [group.projects.length]
+  );
+
+  const updateCurrent = useCallback(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    const center = scroller.getBoundingClientRect().left + scroller.clientWidth / 2;
+    const nearest = slideRefs.current.reduce(
+      (best, slide, index) => {
+        if (!slide) return best;
+
+        const rect = slide.getBoundingClientRect();
+        const distance = Math.abs(rect.left + rect.width / 2 - center);
+        return distance < best.distance ? { index, distance } : best;
+      },
+      { index: 0, distance: Number.POSITIVE_INFINITY }
+    );
+
+    setCurrent(nearest.index);
+  }, []);
+
+  if (!group.projects.length) return null;
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-end justify-between gap-6">
+        <div>
+          <h3 className="text-2xl font-bold text-white">{group.title}</h3>
+          <p className="text-slate-500 text-sm mt-2 max-w-2xl">{group.description}</p>
+        </div>
+
+        {group.projects.length > 1 && (
+          <div className="hidden sm:flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => goTo(current - 1)}
+              className="p-2 rounded-lg border border-[#2d2d3d] bg-[#13131f] text-slate-400 hover:text-white hover:border-violet-500/40 transition-colors"
+              aria-label={`Projeto anterior em ${group.title}`}
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={() => goTo(current + 1)}
+              className="p-2 rounded-lg border border-[#2d2d3d] bg-[#13131f] text-slate-400 hover:text-white hover:border-violet-500/40 transition-colors"
+              aria-label={`Próximo projeto em ${group.title}`}
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="relative">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-[#0d0d18] to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-[#0d0d18] to-transparent" />
+
+        <div
+          ref={scrollerRef}
+          onScroll={updateCurrent}
+          className="-mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-6 pb-3 [scrollbar-width:none] md:-mx-10 md:px-10 [&::-webkit-scrollbar]:hidden"
+        >
+          {group.projects.map((project, index) => (
+            <div
+              key={project.slug}
+              ref={(node) => {
+                slideRefs.current[index] = node;
+              }}
+              className="min-w-0 shrink-0 basis-[88%] snap-center lg:basis-[82%]"
+            >
+              <ProjectCard project={project} index={index} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {group.projects.length > 1 && (
+        <div className="flex items-center justify-center gap-2">
+          {group.projects.map((project, index) => (
+            <button
+              key={project.slug}
+              type="button"
+              onClick={() => goTo(index)}
+              className={`h-1.5 rounded-full transition-all ${
+                index === current ? "w-8 bg-violet-400" : "w-2 bg-slate-700 hover:bg-slate-500"
+              }`}
+              aria-label={`Ir para ${project.title}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function Projects({ groups }: { groups: ProjectGroup[] }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const visibleGroups = groups.filter((group) => group.projects.length > 0);
 
   return (
     <section id="projetos" className="py-24 px-6 bg-[#0d0d18]">
@@ -275,14 +417,14 @@ export default function Projects({ projects }: { projects: Project[] }) {
           </span>
           <h2 className="text-4xl font-bold mt-2 text-white">O que construí</h2>
           <p className="text-slate-500 mt-3 max-w-lg">
-            Projetos desenvolvidos em ambientes profissionais. Por questões de confidencialidade,
-            compartilho prints e resumos funcionais.
+            Projetos pessoais e soluções desenvolvidas em ambientes profissionais. Quando há
+            confidencialidade, compartilho prints e resumos funcionais.
           </p>
         </motion.div>
 
-        <div className="space-y-8">
-          {projects.map((project, i) => (
-            <ProjectCard key={project.slug} project={project} index={i} />
+        <div className="space-y-16">
+          {visibleGroups.map((group) => (
+            <ProjectCarousel key={group.id} group={group} />
           ))}
         </div>
       </div>

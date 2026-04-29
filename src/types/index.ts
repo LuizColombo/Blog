@@ -10,6 +10,15 @@ export interface Project {
   screenshots: string[];
   highlights: string[];
   featured: boolean;
+  repositoryUrl?: string;
+  demoUrl?: string;
+}
+
+export interface ProjectGroup {
+  id: "personal" | "enterprise";
+  title: string;
+  description: string;
+  projects: Project[];
 }
 
 export interface Post {
