@@ -3,28 +3,28 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { Code2, Server, Database, Zap } from "lucide-react";
+import { Code2, Server, Database, BarChart2 } from "lucide-react";
 
 const skills = [
   {
     icon: <Server size={20} />,
     title: "Backend",
-    items: ["PHP / Laravel", "Go / Chi / Gin", "Node.js", "REST APIs", "Microserviços"],
+    items: ["PHP / Laravel", "Go / Chi / Gin", "C# / .NET Core", "Node.js / API REST", "RabbitMQ"],
   },
   {
-    icon: <Database size={20} />,
-    title: "Banco de dados",
-    items: ["PostgreSQL", "Oracle", "MySQL", "Redis", "MongoDB"],
+    icon: <BarChart2 size={20} />,
+    title: "Dados & BI",
+    items: ["Power BI (DAX/M)", "SSIS / SSAS", "Oracle / SQL Server", "MariaDB / MongoDB", "Power Apps"],
   },
   {
     icon: <Code2 size={20} />,
     title: "Frontend",
-    items: ["React / Next.js", "TypeScript", "Tailwind CSS", "Vue.js"],
+    items: ["React / Next.js", "Vue.js", "TypeScript", "Blade"],
   },
   {
-    icon: <Zap size={20} />,
-    title: "Infra & Tools",
-    items: ["Docker", "RabbitMQ", "AWS", "CI/CD", "Git"],
+    icon: <Database size={20} />,
+    title: "DevOps & Tools",
+    items: ["Docker", "Jenkins", "Git", "VTEX", "Integração ERPs"],
   },
 ];
 
@@ -55,18 +55,20 @@ export default function About() {
             className="space-y-4 text-slate-400 leading-relaxed"
           >
             <p>
-              Desenvolvedor backend com foco em construir sistemas que realmente funcionam
-              — escaláveis, bem estruturados e fáceis de manter. Tenho experiência em
-              ambientes de alta demanda onde performance e confiabilidade não são opcionais.
+              Bacharel em Ciência da Computação pela PUC Minas, sou desenvolvedor Full Stack
+              com forte viés analítico. Atualmente no Grupo Vila Nova, atuo na integração de
+              ERPs e no desenvolvimento de soluções escaláveis com PHP (Laravel), Vue.js e
+              RabbitMQ.
             </p>
             <p>
-              Trabalho principalmente com PHP/Laravel e Go no backend, mas transito bem
-              pelo stack completo quando necessário. Gosto de entender profundamente os
-              problemas antes de começar a codar.
+              Tenho background sólido em ecossistema .NET — no Grupo Curimbaba construí
+              pipelines de dados e dashboards analíticos com Power BI (DAX/M), SSIS, SSAS
+              e Oracle. Antes disso, passei pela Alterdata Software gerenciando ERPs e
+              desenvolvendo relatórios em Power BI.
             </p>
             <p>
-              Fora do trabalho, contribuo com projetos open source, estudo arquiteturas de
-              sistema e escrevo sobre o que aprendo aqui neste blog.
+              Fluente em inglês, apaixonado por resolver problemas complexos através da
+              tecnologia para otimizar processos reais.
             </p>
 
             <div className="pt-4">

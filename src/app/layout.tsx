@@ -13,14 +13,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Luiz Colombo · Desenvolvedor Backend",
+  title: "Luiz Colombo · Desenvolvedor Full Stack",
   description:
-    "Portfolio e blog de Luiz Colombo, desenvolvedor backend especializado em PHP, Go e Node.js.",
-  keywords: ["desenvolvedor backend", "PHP", "Go", "Laravel", "portfolio"],
+    "Portfolio e blog de Luiz Colombo, desenvolvedor Full Stack especializado em PHP/Laravel, .NET Core, React e BI. Poços de Caldas, MG.",
+  keywords: [
+    "desenvolvedor full stack",
+    "PHP",
+    "Laravel",
+    "Go",
+    ".NET Core",
+    "React",
+    "Power BI",
+    "Oracle",
+    "portfolio",
+    "blog",
+  ],
   openGraph: {
-    title: "Luiz Colombo · Desenvolvedor Backend",
+    title: "Luiz Colombo · Desenvolvedor Full Stack",
     description:
-      "Portfolio e blog de Luiz Colombo, desenvolvedor backend especializado em PHP, Go e Node.js.",
+      "Portfolio e blog de Luiz Colombo, desenvolvedor Full Stack especializado em PHP/Laravel, .NET Core, React e BI.",
     type: "website",
   },
 };

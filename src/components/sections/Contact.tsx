@@ -10,14 +10,14 @@ const socialLinks = [
   {
     icon: <GitHubIcon size={20} />,
     label: "GitHub",
-    href: "https://github.com/",
-    value: "@luizcolombo",
+    href: "https://github.com/LuizColombo",
+    value: "@LuizColombo",
   },
   {
     icon: <LinkedInIcon size={20} />,
     label: "LinkedIn",
-    href: "https://linkedin.com/in/",
-    value: "luizcolombo",
+    href: "https://www.linkedin.com/in/luiz-henrique-colombo-ab5b551b3",
+    value: "luiz-henrique-colombo",
   },
   {
     icon: <Mail size={20} />,
@@ -50,87 +50,40 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-8">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="space-y-4"
-          >
-            {socialLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-4 p-4 rounded-xl bg-[#13131f] border border-[#2d2d3d] hover:border-violet-500/40 transition-all group"
-              >
-                <span className="text-violet-400">{link.icon}</span>
-                <div>
-                  <p className="text-xs text-slate-500">{link.label}</p>
-                  <p className="text-sm text-white group-hover:text-violet-300 transition-colors">
-                    {link.value}
-                  </p>
-                </div>
-              </a>
-            ))}
-
-            <div className="flex items-center gap-4 p-4 rounded-xl bg-[#13131f] border border-[#2d2d3d]">
-              <span className="text-violet-400">
-                <MapPin size={20} />
-              </span>
-              <div>
-                <p className="text-xs text-slate-500">Localização</p>
-                <p className="text-sm text-white">Brasil · Remoto</p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <form
-              className="space-y-4"
-              onSubmit={(e) => {
-                e.preventDefault();
-                alert("Formulário em breve. Use o email por enquanto!");
-              }}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="max-w-md mx-auto space-y-4"
+        >
+          {socialLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 p-4 rounded-xl bg-[#13131f] border border-[#2d2d3d] hover:border-violet-500/40 transition-all group"
             >
+              <span className="text-violet-400">{link.icon}</span>
               <div>
-                <label className="block text-xs text-slate-500 mb-1">Nome</label>
-                <input
-                  type="text"
-                  placeholder="Seu nome"
-                  className="w-full px-4 py-3 rounded-lg bg-[#13131f] border border-[#2d2d3d] text-white placeholder-slate-600 focus:outline-none focus:border-violet-500/60 transition-colors text-sm"
-                />
+                <p className="text-xs text-slate-500">{link.label}</p>
+                <p className="text-sm text-white group-hover:text-violet-300 transition-colors">
+                  {link.value}
+                </p>
               </div>
-              <div>
-                <label className="block text-xs text-slate-500 mb-1">Email</label>
-                <input
-                  type="email"
-                  placeholder="seu@email.com"
-                  className="w-full px-4 py-3 rounded-lg bg-[#13131f] border border-[#2d2d3d] text-white placeholder-slate-600 focus:outline-none focus:border-violet-500/60 transition-colors text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-slate-500 mb-1">Mensagem</label>
-                <textarea
-                  rows={4}
-                  placeholder="Sobre o que você quer conversar?"
-                  className="w-full px-4 py-3 rounded-lg bg-[#13131f] border border-[#2d2d3d] text-white placeholder-slate-600 focus:outline-none focus:border-violet-500/60 transition-colors text-sm resize-none"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 text-white font-medium hover:opacity-90 transition-opacity"
-              >
-                Enviar mensagem
-              </button>
-            </form>
-          </motion.div>
-        </div>
+            </a>
+          ))}
+
+          <div className="flex items-center gap-4 p-4 rounded-xl bg-[#13131f] border border-[#2d2d3d]">
+            <span className="text-violet-400">
+              <MapPin size={20} />
+            </span>
+            <div>
+              <p className="text-xs text-slate-500">Localização</p>
+              <p className="text-sm text-white">Poços de Caldas, MG · Remoto</p>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

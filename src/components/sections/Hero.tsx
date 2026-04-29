@@ -60,15 +60,16 @@ export default function Hero() {
           variants={itemVariants}
           className="text-xl sm:text-2xl text-slate-400 mb-4"
         >
-          Desenvolvedor Backend · PHP / Go / Node
+          Desenvolvedor Full Stack · PHP / Laravel · Go · .NET Core · React · BI
         </motion.p>
 
         <motion.p
           variants={itemVariants}
           className="text-slate-500 max-w-2xl mx-auto mb-12 leading-relaxed"
         >
-          Construo sistemas robustos, integrações complexas e APIs que escalam.
-          Apaixonado por boas práticas, performance e soluções elegantes para problemas difíceis.
+          Bacharel em Ciência da Computação pela PUC Minas. Construo integrações entre ERPs,
+          APIs escaláveis e dashboards analíticos. Fluente em inglês, apaixonado por resolver
+          problemas complexos com tecnologia.
         </motion.p>
 
         <motion.div
@@ -94,7 +95,7 @@ export default function Hero() {
           className="flex items-center justify-center gap-6 mt-12"
         >
           <a
-            href="https://github.com/"
+            href="https://github.com/LuizColombo"
             target="_blank"
             rel="noopener noreferrer"
             className="text-slate-500 hover:text-white transition-colors"
@@ -102,7 +103,7 @@ export default function Hero() {
             <GitHubIcon size={22} />
           </a>
           <a
-            href="https://linkedin.com/in/"
+            href="https://www.linkedin.com/in/luiz-henrique-colombo-ab5b551b3"
             target="_blank"
             rel="noopener noreferrer"
             className="text-slate-500 hover:text-white transition-colors"
