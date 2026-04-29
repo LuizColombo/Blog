@@ -1,54 +1,111 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { ExternalLink, ChevronLeft, ChevronRight, Building2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Building2, X, ZoomIn } from "lucide-react";
 import type { Project } from "@/types";
 
-function ScreenshotCarousel({ screenshots, title }: { screenshots: string[]; title: string }) {
-  const [current, setCurrent] = useState(0);
+function Lightbox({
+  screenshots,
+  title,
+  initialIndex,
+  onClose,
+}: {
+  screenshots: string[];
+  title: string;
+  initialIndex: number;
+  onClose: () => void;
+}) {
+  const [current, setCurrent] = useState(initialIndex);
 
-  if (!screenshots.length) return null;
+  const prev = useCallback(
+    () => setCurrent((c) => (c - 1 + screenshots.length) % screenshots.length),
+    [screenshots.length]
+  );
+  const next = useCallback(
+    () => setCurrent((c) => (c + 1) % screenshots.length),
+    [screenshots.length]
+  );
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowLeft") prev();
+      if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [onClose, prev, next]);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
 
   return (
-    <div className="relative aspect-video rounded-lg overflow-hidden bg-[#0d0d1a] border border-[#2d2d3d]">
-      <Image
-        src={screenshots[current]}
-        alt={`${title} screenshot ${current + 1}`}
-        fill
-        className="object-cover"
-        onError={(e) => {
-          (e.target as HTMLImageElement).style.display = "none";
-        }}
-      />
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      {/* close */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
+      >
+        <X size={20} />
+      </button>
 
-      {/* Placeholder when no real image */}
-      <div className="absolute inset-0 flex items-center justify-center text-slate-600 text-sm">
-        Screenshot em breve
-      </div>
+      {/* counter */}
+      <span className="absolute top-4 left-1/2 -translate-x-1/2 text-slate-400 text-sm font-mono">
+        {current + 1} / {screenshots.length}
+      </span>
 
+      {/* image */}
+      <motion.div
+        key={current}
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.2 }}
+        className="relative w-[90vw] max-w-5xl aspect-video"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Image
+          src={screenshots[current]}
+          alt={`${title} screenshot ${current + 1}`}
+          fill
+          className="object-contain"
+          sizes="90vw"
+        />
+      </motion.div>
+
+      {/* nav */}
       {screenshots.length > 1 && (
         <>
           <button
-            onClick={() => setCurrent((c) => (c - 1 + screenshots.length) % screenshots.length)}
-            className="absolute left-2 top-1/2 -translate-y-1/2 p-1 rounded bg-black/60 text-white hover:bg-black/80 transition-colors"
+            onClick={(e) => { e.stopPropagation(); prev(); }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
           >
-            <ChevronLeft size={16} />
+            <ChevronLeft size={24} />
           </button>
           <button
-            onClick={() => setCurrent((c) => (c + 1) % screenshots.length)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded bg-black/60 text-white hover:bg-black/80 transition-colors"
+            onClick={(e) => { e.stopPropagation(); next(); }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors"
           >
-            <ChevronRight size={16} />
+            <ChevronRight size={24} />
           </button>
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
             {screenshots.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setCurrent(i)}
-                className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
+                className={`w-2 h-2 rounded-full transition-colors ${
                   i === current ? "bg-violet-400" : "bg-slate-600"
                 }`}
               />
@@ -56,7 +113,85 @@ function ScreenshotCarousel({ screenshots, title }: { screenshots: string[]; tit
           </div>
         </>
       )}
-    </div>
+    </motion.div>
+  );
+}
+
+function ScreenshotCarousel({ screenshots, title }: { screenshots: string[]; title: string }) {
+  const [current, setCurrent] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+
+  if (!screenshots.length) return null;
+
+  return (
+    <>
+      <div className="relative aspect-video rounded-lg overflow-hidden bg-[#0d0d1a] border border-[#2d2d3d] group/carousel">
+        <div className="absolute inset-0 flex items-center justify-center text-slate-600 text-sm">
+          Screenshot em breve
+        </div>
+
+        <Image
+          src={screenshots[current]}
+          alt={`${title} screenshot ${current + 1}`}
+          fill
+          className="object-cover"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = "none";
+          }}
+        />
+
+        {/* expand hint */}
+        <button
+          onClick={() => setLightboxIndex(current)}
+          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-opacity bg-black/20 cursor-zoom-in"
+          aria-label="Expandir imagem"
+        >
+          <span className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 text-white text-xs">
+            <ZoomIn size={14} />
+            Expandir
+          </span>
+        </button>
+
+        {screenshots.length > 1 && (
+          <>
+            <button
+              onClick={(e) => { e.stopPropagation(); setCurrent((c) => (c - 1 + screenshots.length) % screenshots.length); }}
+              className="absolute left-2 top-1/2 -translate-y-1/2 p-1 rounded bg-black/60 text-white hover:bg-black/80 transition-colors"
+            >
+              <ChevronLeft size={16} />
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setCurrent((c) => (c + 1) % screenshots.length); }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded bg-black/60 text-white hover:bg-black/80 transition-colors"
+            >
+              <ChevronRight size={16} />
+            </button>
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+              {screenshots.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
+                  className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                    i === current ? "bg-violet-400" : "bg-slate-600"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      <AnimatePresence>
+        {lightboxIndex !== null && (
+          <Lightbox
+            screenshots={screenshots}
+            title={title}
+            initialIndex={lightboxIndex}
+            onClose={() => setLightboxIndex(null)}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
