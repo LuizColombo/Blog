@@ -73,7 +73,8 @@ export default function About() {
 
             <div className="pt-4">
               <a
-                href="/curriculo.pdf"
+                href="/Luiz_Henrique_Colombo_CV.pdf"
+                download
                 className="inline-flex items-center gap-2 text-violet-400 hover:text-violet-300 transition-colors font-medium"
               >
                 Download CV →

@@ -133,7 +133,7 @@ function ScreenshotCarousel({ screenshots, title }: { screenshots: string[]; tit
 
   return (
     <>
-      <div className="relative aspect-video rounded-lg overflow-hidden bg-[#0d0d1a] border border-[#2d2d3d] group/carousel">
+      <div className="relative aspect-video md:aspect-auto md:h-full md:min-h-[280px] overflow-hidden bg-[#0d0d1a] border-b md:border-b-0 md:border-r border-[#2d2d3d] group/carousel">
         <div className="absolute inset-0 flex items-center justify-center text-slate-600 text-sm">
           Screenshot em breve
         </div>
@@ -213,11 +213,11 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       initial={{ opacity: 0, y: 40 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="group grid h-full md:grid-cols-2 gap-8 p-6 rounded-lg bg-[#13131f] border border-[#2d2d3d] hover:border-violet-500/30 transition-all shadow-2xl shadow-black/20"
+      className="group grid h-full grid-cols-1 md:grid-cols-[3fr_2fr] rounded-2xl bg-[#13131f] border border-[#2d2d3d] hover:border-violet-500/30 transition-all shadow-2xl shadow-black/20 overflow-hidden"
     >
       <ScreenshotCarousel screenshots={project.screenshots} title={project.title} />
 
-      <div className="flex flex-col justify-between">
+      <div className="flex flex-col justify-between p-6">
         <div>
           <div className="flex items-center gap-2 text-slate-500 text-xs mb-3">
             <Building2 size={13} />
