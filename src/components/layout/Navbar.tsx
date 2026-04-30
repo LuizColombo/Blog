@@ -10,6 +10,7 @@ const links = [
   { href: "#projetos", label: "Projetos" },
   { href: "#blog", label: "Blog" },
   { href: "#contato", label: "Contato" },
+  { href: "/tcc", label: "TCC" },
 ];
 
 export default function Navbar() {
