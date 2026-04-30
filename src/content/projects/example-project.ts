@@ -54,6 +54,31 @@ export const enterpriseProjects: Project[] = [
 
 export const personalProjects: Project[] = [
   {
+    slug: "pokedex",
+    title: "Pokédex",
+    description:
+      "Aplicação web para pesquisar Pokémons por nome, habitat ou tipo, consumindo a PokéAPI.",
+    longDescription:
+      "Projeto pessoal desenvolvido em ASP.NET Core MVC (.NET 6) para explorar a PokéAPI de forma interativa. Permite buscar Pokémons por nome ou ID, listar por habitat (cave, forest, sea, etc.) e filtrar por tipo (fire, water, grass, etc.), com paginação nos resultados e layout responsivo via Bootstrap. A aplicação roda com Docker sem precisar de .NET instalado localmente.",
+    role: "Desenvolvedor",
+    company: "Projeto pessoal",
+    period: "Set 2025 – Abr 2026",
+    tags: ["C#", ".NET 6", "ASP.NET Core MVC", "PokéAPI", "Bootstrap", "Docker"],
+    screenshots: [
+      "/projects/personal/pokedex/pokedex_001.png",
+      "/projects/personal/pokedex/pokedex_002.png",
+      "/projects/personal/pokedex/pokedex_003.png",
+      "/projects/personal/pokedex/pokedex_004.png",
+    ],
+    highlights: [
+      "Busca de Pokémon por nome ou ID com listagem paginada",
+      "Filtros por habitat e tipo consumindo endpoints da PokéAPI",
+      "Containerizado com Docker — sem dependência de .NET local para rodar",
+    ],
+    featured: true,
+    repositoryUrl: "https://github.com/LuizColombo/pokedex",
+  },
+  {
     slug: "blockchain-api",
     title: "BlockchainApi",
     description:
