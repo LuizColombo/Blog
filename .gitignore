@@ -42,3 +42,6 @@ next-env.d.ts
 
 # local storage (PDFs, private files)
 /storage
+
+# superpowers brainstorm (mockups locais)
+/.superpowers
