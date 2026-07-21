@@ -48,6 +48,49 @@ export const enterpriseProjects: Project[] = [
     ],
     featured: true,
   },
+  {
+    slug: "wikivila",
+    title: "WikiVila — Base de Conhecimento Interna",
+    description:
+      "Wiki interna estilo Notion para a Vila Nova: setores, permissões granulares, busca full-text e edição colaborativa.",
+    longDescription:
+      "Base de conhecimento interna da Vila Nova para acabar com documentação dispersa e sem controle de acesso. Organiza conteúdo por setores, com permissões granulares por documento, comentários, favoritos e busca full-text em português. Backend em Go servindo API REST e a SPA Nuxt no mesmo container; PostgreSQL com extensões de busca; autenticação via Keycloak (OIDC) compartilhado entre os sistemas internos.",
+    role: "Desenvolvedor Full Stack",
+    company: "Grupo Vila Nova",
+    period: "2026 – presente",
+    tags: ["Go", "chi", "PostgreSQL", "Nuxt 4", "Keycloak", "TipTap", "Docker"],
+    screenshots: [
+      "/projects/enterprise/wikivila/wikivila_001.jpg",
+    ],
+    highlights: [
+      "Migração de auth caseiro (JWT + bcrypt) para Keycloak/OIDC em produção, sem perder dados",
+      "Busca full-text em português com tsvector ponderado + fuzzy matching trigram (pg_trgm)",
+      "Editor rich-text (TipTap) com lock de edição por documento para evitar conflito de escrita",
+    ],
+    featured: true,
+  },
+  {
+    slug: "vtex-focomix",
+    title: "Loja VTEX Focomix — Storefront Headless B2B",
+    description:
+      "Storefront headless B2B da Focomix sobre a plataforma VTEX — front próprio consumindo as APIs de catálogo e checkout.",
+    longDescription:
+      "Loja B2B da Focomix rodando sobre a VTEX, mas sem usar Store Framework: um frontend headless próprio em React/Vite que consome diretamente as APIs de catálogo e checkout da VTEX, mantendo checkout e login nativos por compliance de pagamento. Inclui fluxo de Call Center onde atendentes impersonam clientes B2B para montar pedidos, e um pipeline de integração que alimenta o catálogo/preço/estoque a partir do ERP Oracle.",
+    role: "Desenvolvedor Full Stack",
+    company: "Grupo Vila Nova",
+    period: "2025 – presente",
+    tags: ["React 19", "Vite", "TypeScript", "Tailwind 4", "VTEX IO", "VTEX API", "Node.js"],
+    screenshots: [
+      "/projects/enterprise/vtex-focomix/focomix_001.jpg",
+      "/projects/enterprise/vtex-focomix/focomix_002.jpg",
+    ],
+    highlights: [
+      "Front headless full-custom consumindo as APIs de catálogo/checkout da VTEX — controle total de UX",
+      "Fluxo de Call Center com SSO cross-domain via JWT assinado para impersonação de clientes B2B",
+      "Pipeline de integração ERP Oracle → RabbitMQ → VTEX (multi-loja) via serviço Laravel dedicado",
+    ],
+    featured: true,
+  },
 ];
 
 export const personalProjects: Project[] = [
