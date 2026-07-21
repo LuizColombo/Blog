@@ -13,10 +13,8 @@ export const enterpriseProjects: Project[] = [
     period: "Nov 2025 – presente",
     tags: ["Laravel 12", "PHP 8.3", "React 19", "TypeScript", "Oracle", "Serasa", "Docker", "JWT"],
     screenshots: [
-      "/projects/enterprise/motor-credito/motor_001.png",
-      "/projects/enterprise/motor-credito/motor_002.png",
-      "/projects/enterprise/motor-credito/motor_003.png",
-      "/projects/enterprise/motor-credito/motor_004.png",
+      "/projects/enterprise/motor-credito/motor_001.jpg",
+      "/projects/enterprise/motor-credito/motor_002.jpg",
     ],
     highlights: [
       "Análise interna + externa (Serasa/Quod) consolidada em tela única para o analista",
