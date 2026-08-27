@@ -28,11 +28,33 @@ export const metadata: Metadata = {
     "portfolio",
     "blog",
   ],
+  metadataBase: new URL("https://blog-15n.pages.dev"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Luiz Colombo · Desenvolvedor Full Stack",
     description:
       "Portfolio e blog de Luiz Colombo, desenvolvedor Full Stack especializado em PHP/Laravel, .NET Core, React e BI.",
     type: "website",
+    url: "/",
+    siteName: "Luiz Colombo",
+    locale: "pt_BR",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Luiz Colombo · Engenheiro de Software · Integrações ERP × E-commerce",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Luiz Colombo · Desenvolvedor Full Stack",
+    description:
+      "Portfolio e blog de Luiz Colombo, desenvolvedor Full Stack especializado em PHP/Laravel, .NET Core, React e BI.",
+    images: ["/og.png"],
   },
 };
 
