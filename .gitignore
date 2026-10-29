@@ -45,3 +45,6 @@ next-env.d.ts
 
 # superpowers brainstorm (mockups locais)
 /.superpowers
+
+# estado local do wrangler (pages dev)
+/.wrangler
