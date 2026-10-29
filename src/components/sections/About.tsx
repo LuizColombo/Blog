@@ -3,28 +3,39 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { Code2, Server, Database, BarChart2 } from "lucide-react";
+import { Code2, Server, Database, BarChart2, Workflow, Activity } from "lucide-react";
+import AIAgents from "./AIAgents";
 
 const skills = [
   {
     icon: <Server size={20} />,
     title: "Backend",
-    items: ["PHP / Laravel", "Go / Chi / Gin", "C# / .NET Core", "Node.js / API REST", "RabbitMQ"],
-  },
-  {
-    icon: <BarChart2 size={20} />,
-    title: "Dados & BI",
-    items: ["Power BI (DAX/M)", "SSIS / SSAS", "Oracle / SQL Server", "MariaDB / MongoDB", "Power Apps"],
+    items: ["Go / chi / Gin", "PHP / Laravel (Octane, Horizon)", "Python / FastAPI", "C# / .NET Core", "Node.js"],
   },
   {
     icon: <Code2 size={20} />,
     title: "Frontend",
-    items: ["React / Next.js", "Vue.js", "TypeScript", "Blade"],
+    items: ["React 19 / Vite / Next.js", "TanStack Router · Query", "Vue 3 / Nuxt", "Tailwind / shadcn / Radix", "Framer Motion / React Flow"],
   },
   {
     icon: <Database size={20} />,
-    title: "DevOps & Tools",
-    items: ["Docker", "Jenkins", "Git", "VTEX", "Integração ERPs"],
+    title: "Bancos de dados",
+    items: ["Oracle (ERP)", "PostgreSQL", "MariaDB / SQL Server", "MongoDB / Redis"],
+  },
+  {
+    icon: <Workflow size={20} />,
+    title: "Integração & Mensageria",
+    items: ["RabbitMQ", "VTEX / B2B SaaS", "APIs REST / OpenAPI", "Keycloak (OIDC / RBAC)", "Integração de ERPs"],
+  },
+  {
+    icon: <BarChart2 size={20} />,
+    title: "Dados & BI",
+    items: ["Power BI (DAX/M)", "SSIS / SSAS", "ECharts / visx", "Power Apps"],
+  },
+  {
+    icon: <Activity size={20} />,
+    title: "Infra & Observabilidade",
+    items: ["Docker / Compose", "Jenkins (CI/CD)", "Prometheus / Alertmanager", "Git"],
   },
 ];
 
@@ -57,8 +68,8 @@ export default function About() {
             <p>
               Bacharel em Ciência da Computação pela PUC Minas, sou desenvolvedor Full Stack
               com forte viés analítico. Atualmente no Grupo Vila Nova, atuo na integração de
-              ERPs e no desenvolvimento de soluções escaláveis com PHP (Laravel), Vue.js e
-              RabbitMQ.
+              ERPs e e-commerce B2B, construindo sistemas em Go, Laravel, Python e React
+              conectados por RabbitMQ ao ERP Oracle — e trabalho no dia a dia com agentes de IA.
             </p>
             <p>
               Tenho background sólido em ecossistema .NET — no Grupo Curimbaba construí
@@ -86,7 +97,7 @@ export default function About() {
             initial={{ opacity: 0, x: 30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="grid grid-cols-2 gap-4"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
           >
             {skills.map((skill, i) => (
               <motion.div
@@ -111,6 +122,8 @@ export default function About() {
             ))}
           </motion.div>
         </div>
+
+        <AIAgents />
       </div>
     </section>
   );
