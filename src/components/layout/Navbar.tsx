@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "#sobre", label: "Sobre" },
-  { href: "#projetos", label: "Projetos" },
-  { href: "#blog", label: "Blog" },
-  { href: "#contato", label: "Contato" },
+  { href: "/#sobre", label: "Sobre" },
+  { href: "/#projetos", label: "Projetos" },
+  { href: "/#blog", label: "Blog" },
+  { href: "/#contato", label: "Contato" },
   { href: "/tcc", label: "TCC" },
 ];
 
@@ -36,12 +37,12 @@ export default function Navbar() {
       )}
     >
       <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <a
-          href="#"
+        <Link
+          href="/"
           className="text-lg font-bold bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent"
         >
           luiz.dev
-        </a>
+        </Link>
 
         <ul className="hidden md:flex items-center gap-8">
           {links.map((link) => (
@@ -57,12 +58,12 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <a
-          href="#contato"
+        <Link
+          href="/#contato"
           className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-violet-500/50 text-sm text-violet-300 hover:bg-violet-500/10 transition-colors"
         >
           Fale comigo
-        </a>
+        </Link>
 
         <button
           className="md:hidden text-slate-400 hover:text-white"
