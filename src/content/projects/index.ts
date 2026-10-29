@@ -1,39 +1,480 @@
-import type { Project, ProjectGroup } from "@/types";
+import type { Project, ProjectCategory } from "@/types";
 
-export const enterpriseProjects: Project[] = [
+const VILA_NOVA = "Grupo Vila Nova";
+
+export const projects: Project[] = [
+  {
+    slug: "gestor-fretes",
+    title: "Gestor de Fretes — o frete em 360°",
+    shortTitle: "Gestor de Fretes 360°",
+    category: "enterprise",
+    description:
+      "Acompanha a história completa de cada frete — da negociação com a transportadora à auditoria do CT-e, ao pagamento e aos indicadores que voltam para a próxima negociação.",
+    problem:
+      "Cada área via só um pedaço do frete: o Transporte negociava sem saber quanto cada rota custava de verdade, a Controladoria auditava CT-e em planilha, o Financeiro pagava sem enxergar os acréscimos lançados no caminho. O sistema anterior, em PHP, cobria só a auditoria e estava no limite.",
+    solution:
+      "Reescrevi a base em Go + React como uma ferramenta 360° do frete, organizada no ciclo Negociação → Auditoria → Financeiro → Indicadores. O coração é um motor de cálculo que aplica o contrato por precedência e aponta cada divergência; Assistentes com IA cruzam as planilhas das transportadoras e do TMS. A Auditoria já roda em produção; Transporte, Financeiro e Indicadores estão entrando no ar sobre a mesma base.",
+    role: "Desenvolvedor Full Stack",
+    company: VILA_NOVA,
+    period: "2026",
+    status: "Em produção",
+    accent: "violet",
+    tags: ["Go 1.25", "chi", "Oracle", "React 19", "Vite 7", "TanStack Router", "visx", "Docker", "Jenkins"],
+    screenshots: [],
+    highlights: [
+      "Visão 360° do ciclo do frete: Negociação (Transporte) → Auditoria (Controladoria) → Financeiro → Indicadores, que voltam para a negociação",
+      "Motor de cálculo com precedência de regras (mínimo → transferência → percentual, ad valorem sempre somado) e contratos com vigência versionada",
+      "Assistentes com IA que cruzam a planilha da transportadora e o relatório do TMS com a base de contratos e apontam acréscimos indevidos",
+      "Migração PHP → Go provada por equivalência: telas conferidas campo a campo e export de 20 mil linhas idêntico, em menos da metade do tempo",
+      "Escrita com modo simular/ligado: a gravação só vira depois de validada em produção; a documentação de regras vem direto do WikiVila",
+    ],
+    metrics: [
+      { value: 20137, label: "linhas de auditoria exportadas em 40 s" },
+      { value: 455, label: "testes automatizados no front" },
+      { value: 4, label: "áreas num só ciclo" },
+    ],
+    chart: {
+      type: "compare",
+      title: "Export da auditoria (20.137 linhas)",
+      caption: "Mesmo arquivo, byte a byte. Menor é melhor.",
+      unit: "s",
+      data: [
+        { label: "Sistema anterior (PHP)", value: 90 },
+        { label: "Gestor (Go)", value: 40 },
+      ],
+    },
+    flow: {
+      nodes: [
+        { id: "tms", label: "TMS", sub: "cargas · contratos", kind: "external", col: 0, row: 0 },
+        { id: "erp", label: "ERP Oracle", sub: "CT-e · NF-e", kind: "data", col: 0, row: 1.2 },
+        { id: "sheets", label: "Planilhas", sub: "transportadoras", kind: "external", col: 0, row: 2.4 },
+        { id: "assist", label: "Assistentes IA", sub: "acréscimos · divergências", kind: "service", col: 1, row: 2.4 },
+        { id: "core", label: "Gestor de Fretes", sub: "Go · motor de cálculo", kind: "service", col: 2, row: 1.2 },
+        { id: "wiki", label: "WikiVila", sub: "regras documentadas", kind: "external", col: 2, row: 2.7 },
+        { id: "neg", label: "Negociação", sub: "Transporte · tabelas", kind: "front", col: 3.2, row: 0 },
+        { id: "audit", label: "Auditoria", sub: "Controladoria", kind: "front", col: 4.6, row: 0 },
+        { id: "fin", label: "Financeiro", sub: "aprovação de pagamento", kind: "front", col: 4.6, row: 2.4 },
+        { id: "ind", label: "Indicadores", sub: "custo por rota", kind: "front", col: 3.2, row: 2.4 },
+        { id: "pay", label: "Pagamento", sub: "CIOT · cartão frete", kind: "external", col: 5.9, row: 2.4 },
+      ],
+      edges: [
+        { from: "tms", to: "core" },
+        { from: "erp", to: "core", label: "CT-e" },
+        { from: "sheets", to: "assist" },
+        { from: "assist", to: "core" },
+        { from: "wiki", to: "core" },
+        { from: "core", to: "neg", label: "contratos" },
+        { from: "core", to: "ind", label: "dados" },
+        { from: "neg", to: "audit", label: "tabelas" },
+        { from: "audit", to: "fin", label: "conferido" },
+        { from: "fin", to: "ind", label: "custo real" },
+        { from: "ind", to: "neg", label: "renegocia" },
+        { from: "fin", to: "pay" },
+      ],
+    },
+    featured: true,
+  },
+  {
+    slug: "debito-pasta",
+    title: "Débito de Pasta — Conciliação Financeira",
+    shortTitle: "Débito de Pasta",
+    category: "enterprise",
+    description:
+      "Substituiu um processo em papel que levava de uma a duas semanas: conciliação bancária, premiação e débito na comissão dos representantes agora saem em minutos.",
+    problem:
+      "Todo mês o Financeiro conciliava o retorno do banco com os títulos do ERP, trocava espécies, apurava a premiação e calculava quanto debitar da comissão de cada representante por título em aberto — em papel e planilha. O ciclo levava de uma a duas semanas, dependia de quem sabia o caminho e não deixava rastro de quem alterou o quê.",
+    solution:
+      "Sistema full stack (React + FastAPI + Oracle) que faz o ciclo inteiro em alguns cliques: o arquivo do banco é conciliado contra uma view dos títulos no ERP, a premiação entra por planilha versionada e os lotes de débito saem prontos por representante. Cada escrita é auditada na mesma transação, o acesso é por perfil via Keycloak e a tela inicial virou um ranking por representante em vez de paginar ~68 mil títulos.",
+    role: "Desenvolvedor Full Stack",
+    company: VILA_NOVA,
+    period: "Jun – Out 2026",
+    status: "Em produção",
+    accent: "emerald",
+    tags: ["React 19", "TypeScript", "Vite 7", "shadcn/ui", "Python 3.11", "FastAPI", "Oracle", "Keycloak", "Docker"],
+    screenshots: [],
+    highlights: [
+      "De 1–2 semanas em papel para minutos: conciliação, troca de espécie, premiação e débito no mesmo fluxo",
+      "Importação de premiação versionada (3 planilhas por mês): substituir exige lastro, e conflito devolve 409 com o retrato do que já existe — ninguém sobrescreve sem ver",
+      "Auditoria de toda escrita na mesma transação do dado; sync horário de espécies com o ERP que só insere e atualiza, nunca apaga",
+      "RBAC com Keycloak (PKCE + client roles) e menu montado pelo servidor: a permissão mora num lugar só",
+      "Diagnóstico de cold start: a validação de token buscava as chaves (JWKS) de forma síncrona e travava o event loop — a tela ficava em branco por minutos",
+    ],
+    metrics: [
+      { value: 0, text: "Semanas → min", label: "processo que era feito em papel" },
+      { value: 156, label: "testes automatizados" },
+      { value: 68, prefix: "~", suffix: " mil", label: "títulos resumidos num ranking" },
+    ],
+    flow: {
+      nodes: [
+        { id: "bank", label: "Retorno bancário", sub: "arquivo do banco", kind: "external", col: 0, row: 0 },
+        { id: "kc", label: "Keycloak", sub: "PKCE · roles", kind: "external", col: 0, row: 2 },
+        { id: "api", label: "API FastAPI", sub: "conciliação", kind: "service", col: 1, row: 1 },
+        { id: "erp", label: "ERP Oracle", sub: "títulos em aberto", kind: "data", col: 2, row: 0 },
+        { id: "audit", label: "Auditoria", sub: "mesma transação", kind: "data", col: 2, row: 2 },
+        { id: "front", label: "Front React", sub: "ranking por RCA", kind: "front", col: 3, row: 1 },
+        { id: "user", label: "Financeiro", sub: "gestores · RCAs", kind: "user", col: 4, row: 1 },
+      ],
+      edges: [
+        { from: "bank", to: "api", label: "upload" },
+        { from: "kc", to: "api", label: "JWT" },
+        { from: "api", to: "erp", label: "concilia" },
+        { from: "api", to: "audit" },
+        { from: "api", to: "front", label: "lotes de débito" },
+        { from: "front", to: "user" },
+      ],
+    },
+    featured: true,
+  },
+  {
+    slug: "monitoramento-noc",
+    title: "Monitoramento NOC — Observabilidade Própria",
+    shortTitle: "Monitoramento NOC",
+    category: "enterprise",
+    description:
+      "Painel único de observabilidade de servidores, filas e jobs, feito para rodar numa TV de operações.",
+    problem:
+      "O monitoramento estava espalhado em três lugares e as telas do Grafana eram difíceis de ler para quem não é técnico. Fila travada, servidor sem disco ou deploy fora do ar costumavam ser descobertos pelo usuário, não pelo time.",
+    solution:
+      "Mantive o Prometheus como fonte da verdade e troquei só a apresentação — decisão registrada em ADR, sem migrar nenhum dado. Um BFF em Go traduz PromQL em respostas prontas para um front React + ECharts em modo kiosk, com a playlist de telas guardada na URL para a TV do NOC girar sozinha. Onde não havia métrica, eu criei: um exporter próprio para as filas RabbitMQ e um textfile collector que mostra se cada servidor está com o deploy íntegro.",
+    role: "Desenvolvedor Full Stack",
+    company: VILA_NOVA,
+    period: "Jul – Out 2026",
+    status: "Em produção",
+    accent: "cyan",
+    tags: ["Prometheus", "Alertmanager", "Go", "React 19", "ECharts 6", "TanStack", "Docker Compose", "RabbitMQ"],
+    screenshots: [],
+    highlights: [
+      "ADR: manter Prometheus + Alertmanager e substituir só a visualização — menos risco, zero migração",
+      "Exporter de filas RabbitMQ em Go só com a biblioteca padrão, com alerta e auto-rebuild exercitados em produção",
+      "Integridade de deploy em 10 servidores via textfile collector do node-exporter",
+      "Painel de defasagem com 45 datasets e tela de jobs do Oracle com os maiores ofensores",
+      "Alertas no Discord, com regras pensadas para acordar alguém só quando importa",
+    ],
+    metrics: [
+      { value: 95, label: "filas monitoradas" },
+      { value: 5, suffix: " s", label: "intervalo de coleta" },
+      { value: 11, label: "hosts no scrape" },
+    ],
+    chart: {
+      type: "bars",
+      title: "O que o painel acompanha",
+      data: [
+        { label: "Filas RabbitMQ", value: 95 },
+        { label: "Datasets (defasagem)", value: 45 },
+        { label: "Hosts", value: 11 },
+        { label: "Servidores (deploy)", value: 10 },
+      ],
+    },
+    flow: {
+      nodes: [
+        { id: "srv", label: "Servidores", sub: "node-exporter · cAdvisor", kind: "data", col: 0, row: 0 },
+        { id: "queues", label: "Filas RabbitMQ", sub: "exporter Go", kind: "queue", col: 0, row: 1.5 },
+        { id: "prom", label: "Prometheus", sub: "scrape 5 s", kind: "service", col: 1, row: 0.75 },
+        { id: "oracle", label: "Jobs Oracle", sub: "agendamentos", kind: "data", col: 1, row: -0.75 },
+        { id: "bff", label: "BFF Go", sub: "PromQL", kind: "service", col: 2, row: 0 },
+        { id: "alert", label: "Alertmanager", sub: "regras", kind: "service", col: 2, row: 1.75 },
+        { id: "front", label: "React + ECharts", sub: "modo kiosk", kind: "front", col: 3, row: 0 },
+        { id: "discord", label: "Discord", sub: "alertas", kind: "external", col: 3, row: 1.75 },
+        { id: "tv", label: "TV do NOC", sub: "operação", kind: "user", col: 4, row: 0 },
+      ],
+      edges: [
+        { from: "srv", to: "prom" },
+        { from: "queues", to: "prom" },
+        { from: "oracle", to: "bff" },
+        { from: "prom", to: "bff" },
+        { from: "prom", to: "alert" },
+        { from: "bff", to: "front" },
+        { from: "alert", to: "discord" },
+        { from: "front", to: "tv" },
+      ],
+    },
+    featured: true,
+  },
+  {
+    slug: "ra-agentes-ia",
+    title: "RA — Plataforma de Agentes de IA",
+    shortTitle: "RA · Agentes de IA",
+    category: "enterprise",
+    description:
+      "Plataforma corporativa de agentes de IA: chat com streaming, guard rails e integração com os processos da empresa.",
+    problem:
+      "A empresa precisava colocar agentes de IA na mão do time comercial com segurança: controle de quem acessa o quê, limites claros do que o agente pode fazer e encaixe nos fluxos de aprovação que já existiam — sem virar mais um chat solto.",
+    solution:
+      "Construímos em equipe uma plataforma com front React e API FastAPI. O menu e as ações vêm do backend conforme a permissão de cada usuário no Keycloak, então a regra mora num lugar só. O chat responde em streaming (SSE), token a token, e toda mensagem passa por guard rails antes de chegar ao modelo. Quando o agente precisa agir — um pedido de cancelamento, por exemplo — ele não executa direto: abre um processo no BPM via webhook, e a aprovação segue o caminho de sempre.",
+    role: "Desenvolvimento em equipe · Front-end",
+    company: VILA_NOVA,
+    period: "2026",
+    status: "Em validação",
+    team: true,
+    accent: "rose",
+    tags: ["React 19", "Vite 7", "Tailwind 4", "TanStack Router", "Radix", "Motion", "Zustand", "FastAPI", "PostgreSQL", "Keycloak", "SSE"],
+    screenshots: [],
+    highlights: [
+      "Chat com streaming SSE numa bolha arrastável com três tamanhos, que acompanha o usuário sem bloquear a navegação",
+      "Menu e ações dirigidos pelo backend conforme as permissões (Keycloak) — o front não decide o que o usuário pode ver",
+      "Guard rails antes do modelo e ações sensíveis delegadas ao BPM: a IA propõe, o processo aprova",
+      "Três temas de marca com claro/escuro e busca global ⌘K",
+    ],
+    metrics: [
+      { value: 0, text: "SSE", label: "respostas em streaming" },
+      { value: 3, label: "temas de marca" },
+      { value: 0, text: "⌘K", label: "busca global" },
+    ],
+    flow: {
+      nodes: [
+        { id: "user", label: "Vendedor", sub: "time comercial", kind: "user", col: 0, row: 1 },
+        { id: "kc", label: "Keycloak", sub: "permissões", kind: "external", col: 1, row: 0 },
+        { id: "front", label: "Portal React", sub: "chat · SSE", kind: "front", col: 1, row: 1 },
+        { id: "api", label: "API FastAPI", sub: "orquestração", kind: "service", col: 2, row: 1 },
+        { id: "db", label: "PostgreSQL", sub: "conversas", kind: "data", col: 2, row: 2.2 },
+        { id: "guard", label: "Guard rails", sub: "políticas", kind: "service", col: 3, row: 1 },
+        { id: "llm", label: "Modelo de linguagem", sub: "LLM", kind: "external", col: 4, row: 1 },
+        { id: "bpm", label: "BPM", sub: "webhook", kind: "external", col: 3, row: 2.2 },
+      ],
+      edges: [
+        { from: "user", to: "front" },
+        { from: "kc", to: "front", label: "login" },
+        { from: "front", to: "api", label: "SSE" },
+        { from: "api", to: "db" },
+        { from: "api", to: "guard" },
+        { from: "guard", to: "llm" },
+        { from: "api", to: "bpm", label: "ação" },
+      ],
+    },
+    featured: true,
+  },
+  {
+    slug: "ipaas-middleware",
+    title: "iPaaS Middleware — de n8n para Go",
+    shortTitle: "iPaaS n8n → Go",
+    category: "enterprise",
+    description:
+      "Converte workflows do n8n em rotas Go tipadas e documentadas, com painel visual dos fluxos.",
+    problem:
+      "O bot de cobrança e crédito no WhatsApp dependia de workflows no n8n: um JSON difícil de revisar em pull request, sem tipos, sem teste e com lógica espalhada em nós de JavaScript. Trocar a ferramenta não podia quebrar a plataforma do bot, que já estava em uso.",
+    solution:
+      "Escrevi um conversor que transforma o JSON do n8n em código Go tipado e um teste de equivalência que roda o JavaScript original (via goja) contra a versão Go com as mesmas entradas. A API devolve exatamente o mesmo contrato que o n8n, então a plataforma do bot migra trocando só a URL. Cada rota é documentada em OpenAPI (Huma + Scalar) — e rota sem documentação reprova o build.",
+    role: "Desenvolvedor Back-end",
+    company: VILA_NOVA,
+    period: "Out 2026",
+    status: "Em produção",
+    accent: "amber",
+    tags: ["Go", "Huma v2", "OpenAPI", "Scalar", "React Flow", "MongoDB", "Docker", "Jenkins"],
+    screenshots: [],
+    highlights: [
+      "Conversor de workflow n8n → Go com teste de equivalência JS × Go rodando no CI",
+      "Contrato idêntico ao n8n: migração sem tocar na plataforma do bot",
+      "Documentação obrigatória garantida por teste; histórico de execuções no MongoDB com TTL de 30 dias",
+      "Painel em React Flow para visualizar cada fluxo como diagrama",
+    ],
+    metrics: [
+      { value: 11, label: "workflows mapeados" },
+      { value: 100, suffix: "%", label: "rotas com doc OpenAPI" },
+      { value: 30, suffix: " dias", label: "de histórico por execução" },
+    ],
+    flow: {
+      nodes: [
+        { id: "n8n", label: "Workflows n8n", sub: "JSON exportado", kind: "external", col: 0, row: 0 },
+        { id: "conv", label: "Conversor", sub: "JSON → Go", kind: "service", col: 1, row: 0 },
+        { id: "eq", label: "Equivalência", sub: "JS × Go", kind: "service", col: 2, row: 0 },
+        { id: "bot", label: "Bot WhatsApp", sub: "cobrança · crédito", kind: "user", col: 1, row: 2 },
+        { id: "api", label: "API Go", sub: "Huma · OpenAPI", kind: "service", col: 3, row: 1 },
+        { id: "erp", label: "API interna / ERP", sub: "dados", kind: "data", col: 4, row: 0.3 },
+        { id: "mongo", label: "Histórico", sub: "MongoDB · TTL", kind: "data", col: 4, row: 1.7 },
+      ],
+      edges: [
+        { from: "n8n", to: "conv" },
+        { from: "conv", to: "eq" },
+        { from: "eq", to: "api", label: "deploy" },
+        { from: "bot", to: "api", label: "mesma URL" },
+        { from: "api", to: "erp" },
+        { from: "api", to: "mongo" },
+      ],
+    },
+    featured: false,
+  },
   {
     slug: "motor-credito",
-    title: "Motor de Crédito",
+    title: "Motor de Crédito B2B",
+    shortTitle: "Motor de Crédito",
+    category: "enterprise",
     description:
-      "Engine de análise de crédito B2B com integração Serasa, Quod e regras de negócio configuráveis.",
-    longDescription:
-      "Sistema de análise de crédito para concessão de limite a clientes B2B. Avalia comportamento interno (histórico de pagamentos, faturamento, inadimplência) e dados externos (Serasa PF/PJ, Quod) para recomendar limite e formas de pagamento. As regras de crédito são configuráveis pelo time comercial via painel administrativo, sem necessidade de código. Integração com workflow ZEEV para fluxo de aprovação multinível.",
+      "Analisa crédito de clientes B2B cruzando histórico interno com bureaus externos e recomenda limite e forma de pagamento.",
+    problem:
+      "A concessão de limite para clientes B2B dependia de análise manual: o analista consultava o histórico de pagamentos no ERP, os bureaus externos e planilhas, cada um num sistema. Qualquer mudança na política de crédito virava demanda de desenvolvimento.",
+    solution:
+      "Engine em Laravel (Octane) que consolida o comportamento interno — pagamentos, faturamento, inadimplência — e os bureaus Serasa (PF/PJ) e Quod numa tela única, recomendando limite e formas de pagamento. Score, limite, prazo e restrições por segmento viraram regras configuráveis pelo próprio comercial. A aprovação segue um fluxo multinível no BPM, e o acesso é controlado por permissão em cada rota.",
     role: "Desenvolvedor Full Stack",
-    company: "Grupo Vila Nova",
+    company: VILA_NOVA,
     period: "Nov 2025 – presente",
-    tags: ["Laravel 12", "PHP 8.3", "React 19", "TypeScript", "Oracle", "Serasa", "Docker", "JWT"],
+    status: "Em produção",
+    accent: "blue",
+    tags: ["Laravel 12", "PHP 8.3", "Octane", "React 19", "TypeScript", "Oracle", "Serasa", "Quod", "Docker"],
     screenshots: [
       "/projects/enterprise/motor-credito/motor_001.jpg",
       "/projects/enterprise/motor-credito/motor_002.jpg",
     ],
     highlights: [
-      "Análise interna + externa (Serasa/Quod) consolidada em tela única para o analista",
-      "Regras de crédito 100% configuráveis: score, limite, prazo, restrições por segmento",
-      "RBAC granular com roles e permissões por rota (spatie/laravel-permission)",
+      "Análise interna + externa (Serasa PF/PJ e Quod) consolidada em tela única para o analista",
+      "Regras de crédito configuráveis pelo comercial — score, limite, prazo e restrições por segmento — sem deploy",
+      "Aprovação multinível integrada ao BPM e RBAC granular por rota",
+      "Correção na fila de reconsulta, que deixava passar a maioria dos casos elegíveis",
     ],
-    featured: true,
+    metrics: [
+      { value: 2, label: "bureaus externos integrados" },
+      { value: 0, text: "0 deploy", label: "para mudar a política de crédito" },
+      { value: 0, text: "Multinível", label: "aprovação via BPM" },
+    ],
+    flow: {
+      nodes: [
+        { id: "analyst", label: "Analista", sub: "comercial", kind: "user", col: 0, row: 1 },
+        { id: "front", label: "Painel React", sub: "tela única", kind: "front", col: 1, row: 1 },
+        { id: "motor", label: "Motor Laravel", sub: "score · limite", kind: "service", col: 2, row: 1 },
+        { id: "erp", label: "ERP Oracle", sub: "histórico interno", kind: "data", col: 3, row: 0 },
+        { id: "bureau", label: "Serasa · Quod", sub: "bureaus", kind: "external", col: 3, row: 1 },
+        { id: "rules", label: "Regras", sub: "configuráveis", kind: "data", col: 1, row: 2.2 },
+        { id: "bpm", label: "BPM", sub: "aprovação", kind: "external", col: 3, row: 2.2 },
+      ],
+      edges: [
+        { from: "analyst", to: "front" },
+        { from: "front", to: "motor" },
+        { from: "motor", to: "erp" },
+        { from: "motor", to: "bureau" },
+        { from: "rules", to: "motor" },
+        { from: "motor", to: "bpm", label: "aprovação" },
+      ],
+    },
+    featured: false,
+  },
+  {
+    slug: "vtex-focomix",
+    title: "Loja VTEX Focomix — Headless B2B + Integração",
+    shortTitle: "Focomix VTEX",
+    category: "enterprise",
+    description:
+      "Storefront headless B2B sobre a VTEX, alimentado por um pipeline orientado a eventos a partir do ERP Oracle.",
+    problem:
+      "O B2B da Focomix precisava de uma experiência de compra que o Store Framework da VTEX não entregava, e catálogo, preço e estoque de três lojas tinham que refletir o ERP quase em tempo real — sem produto aparecendo como integrado quando não estava.",
+    solution:
+      "Do lado da loja, um front próprio em React/Vite consome as APIs de catálogo e checkout da VTEX, mantendo checkout e login nativos por compliance de pagamento; o Call Center atende como o cliente via SSO cross-domain com JWT assinado. Do lado da integração, publishers agendados em Laravel leem o ERP Oracle e publicam no RabbitMQ; workers no Horizon entregam na VTEX. Preço e estoque giram a cada minuto, catálogo a cada cinco.",
+    role: "Desenvolvedor Full Stack",
+    company: VILA_NOVA,
+    period: "2025 – presente",
+    status: "Em produção",
+    accent: "violet",
+    tags: ["React 19", "Vite", "TypeScript", "Tailwind 4", "VTEX IO", "Laravel 11", "Horizon", "RabbitMQ", "Oracle"],
+    screenshots: [
+      "/projects/enterprise/vtex-focomix/focomix_001.jpg",
+      "/projects/enterprise/vtex-focomix/focomix_002.jpg",
+    ],
+    highlights: [
+      "Front headless full-custom sobre as APIs da VTEX — controle total de UX sem abrir mão do checkout nativo",
+      "Call Center com SSO cross-domain via JWT assinado para montar pedido como o cliente B2B",
+      "Diagnóstico de um lock preso por 24 h nos agendamentos: a expiração passou a ser proporcional à frequência (26 schedules corrigidos)",
+      "Diagnóstico de “falso integrado” em cascata (categoria → produto → SKU), conferido item a item depois da correção",
+    ],
+    metrics: [
+      { value: 1, suffix: " min", label: "ciclo de preço e estoque" },
+      { value: 3, label: "lojas no mesmo pipeline" },
+      { value: 26, label: "agendamentos corrigidos" },
+    ],
+    chart: {
+      type: "bars",
+      title: "Ciclo de sincronização ERP → VTEX",
+      caption: "Intervalo entre publicações, em minutos.",
+      unit: "min",
+      data: [
+        { label: "Preço · estoque · crédito", value: 1 },
+        { label: "Catálogo", value: 5 },
+        { label: "Tracking", value: 60 },
+      ],
+    },
+    flow: {
+      nodes: [
+        { id: "erp", label: "ERP Oracle", sub: "preço · estoque", kind: "data", col: 0, row: 0 },
+        { id: "pub", label: "Publishers", sub: "Laravel · agendados", kind: "service", col: 1, row: 0 },
+        { id: "mq", label: "RabbitMQ", sub: "fila", kind: "queue", col: 2, row: 0 },
+        { id: "workers", label: "Workers", sub: "Horizon", kind: "service", col: 3, row: 0 },
+        { id: "vtex", label: "API VTEX", sub: "3 lojas", kind: "external", col: 4, row: 0 },
+        { id: "store", label: "Storefront", sub: "React headless", kind: "front", col: 4, row: 1.5 },
+        { id: "client", label: "Cliente B2B", sub: "e Call Center", kind: "user", col: 3, row: 1.5 },
+      ],
+      edges: [
+        { from: "erp", to: "pub" },
+        { from: "pub", to: "mq" },
+        { from: "mq", to: "workers" },
+        { from: "workers", to: "vtex" },
+        { from: "vtex", to: "store", label: "catálogo" },
+        { from: "store", to: "client" },
+      ],
+    },
+    featured: false,
+  },
+  {
+    slug: "wikivila",
+    title: "WikiVila — Base de Conhecimento Interna",
+    shortTitle: "WikiVila",
+    category: "enterprise",
+    description:
+      "Wiki interna estilo Notion com permissões por setor, busca full-text em português e feed para IA.",
+    problem:
+      "A documentação da empresa estava dispersa em arquivos e chats, sem controle de acesso por área e invisível para as ferramentas de IA internas — quem precisava de uma regra tinha que perguntar para alguém.",
+    solution:
+      "API em Go + PostgreSQL e editor por blocos (Nuxt + TipTap), com permissões por setor via Keycloak e busca full-text em português. Além das pessoas, a wiki serve outros sistemas: um feed (llms.txt) alimenta a plataforma de IA, e um token de integração permite que, por exemplo, o Gestor de Fretes mostre a documentação das regras direto da wiki — corrigir o texto é editar o documento, não o código.",
+    role: "Desenvolvedor Full Stack",
+    company: VILA_NOVA,
+    period: "2026 – presente",
+    status: "Em produção",
+    accent: "blue",
+    tags: ["Go", "chi", "PostgreSQL", "Nuxt 4", "TipTap 3", "Keycloak", "Docker"],
+    screenshots: ["/projects/enterprise/wikivila/wikivila_001.jpg"],
+    highlights: [
+      "Migração de auth caseiro (JWT + bcrypt) para Keycloak/OIDC em produção, sem perder dados nem sessões",
+      "Busca full-text em português com tsvector ponderado + fuzzy matching (pg_trgm) para erro de digitação",
+      "Lock de edição por documento no TipTap para evitar conflito de escrita",
+      "Feed para IA (llms.txt), tokens de integração e import/export Markdown com Mermaid nos dois sentidos",
+    ],
+    metrics: [
+      { value: 14, label: "migrations versionadas" },
+      { value: 18, label: "testes no front" },
+      { value: 4, label: "temas" },
+    ],
+    flow: {
+      nodes: [
+        { id: "user", label: "Colaborador", sub: "por setor", kind: "user", col: 0, row: 1 },
+        { id: "front", label: "Editor Nuxt", sub: "TipTap", kind: "front", col: 1, row: 1 },
+        { id: "kc", label: "Keycloak", sub: "OIDC", kind: "external", col: 1, row: 0 },
+        { id: "api", label: "API Go", sub: "permissões", kind: "service", col: 2, row: 1 },
+        { id: "db", label: "PostgreSQL", sub: "full-text pt-BR", kind: "data", col: 3, row: 1 },
+        { id: "ai", label: "Plataforma de IA", sub: "llms.txt", kind: "external", col: 3, row: 2.2 },
+      ],
+      edges: [
+        { from: "user", to: "front" },
+        { from: "kc", to: "front" },
+        { from: "front", to: "api" },
+        { from: "api", to: "db" },
+        { from: "api", to: "ai", label: "feed" },
+      ],
+    },
+    featured: false,
   },
   {
     slug: "zukkin",
     title: "Zukkin — Pesquisa de Preços via NF-e",
+    shortTitle: "Zukkin",
+    category: "enterprise",
     description:
-      "Plataforma para processamento de NF-e XML: extrai preços de produtos, cruza com ERP Oracle e envia CSV via FTP.",
-    longDescription:
-      "Solução desenvolvida para automatizar pesquisa de preços de mercado a partir de notas fiscais eletrônicas. O usuário faz upload do XML da NF-e, o sistema extrai os itens (EAN, preço, descrição), consulta o ERP Oracle para resolver o código interno do produto e gera um CSV no formato da plataforma Zukkin. O arquivo é enviado automaticamente via FTP. Backend em Go com PostgreSQL para histórico de uploads e Oracle read-only para lookup de EAN.",
+      "Transforma o XML de uma NF-e em pesquisa de preços pronta: extrai itens, resolve no ERP e envia por FTP.",
+    problem:
+      "A pesquisa de preços de mercado era montada à mão a partir das notas fiscais: abrir o XML, copiar item por item, achar o código interno de cada produto no ERP e montar o arquivo no formato da plataforma parceira.",
+    solution:
+      "Um upload resolve tudo. O backend em Go faz o parse do XML da NF-e, resolve EAN → código interno numa consulta somente leitura ao Oracle, gera o CSV no layout da plataforma e envia por FTP. O histórico de cada envio fica no PostgreSQL, e a API tem rate limiting por IP e autenticação JWT em cookie httpOnly.",
     role: "Desenvolvedor Full Stack",
-    company: "Grupo Vila Nova",
+    company: VILA_NOVA,
     period: "Nov 2025 – presente",
-    tags: ["Go", "Chi", "PostgreSQL", "Oracle", "React 19", "TypeScript", "Docker", "FTP"],
+    status: "Em produção",
+    accent: "emerald",
+    tags: ["Go", "chi", "PostgreSQL", "Oracle", "React 19", "TypeScript", "Docker", "FTP"],
     screenshots: [
       "/projects/enterprise/zukkin/zukkin_001.png",
       "/projects/enterprise/zukkin/zukkin_002.png",
@@ -42,68 +483,48 @@ export const enterpriseProjects: Project[] = [
       "/projects/enterprise/zukkin/zukkin_005.png",
     ],
     highlights: [
-      "Pipeline automático: XML → parse → lookup Oracle ERP → CSV → FTP em um único upload",
-      "Backend em Go com rate limiting por IP e autenticação JWT em cookie httpOnly",
-      "Integração Oracle read-only via sijms/go-ora para resolução de EAN → código interno",
+      "Pipeline automático: XML → parse → lookup no ERP → CSV → FTP em um único upload",
+      "Rate limiting por IP e autenticação JWT em cookie httpOnly",
+      "Oracle somente leitura para resolver EAN → código interno",
     ],
-    featured: true,
+    metrics: [
+      { value: 1, label: "upload, zero passo manual" },
+      { value: 5, label: "etapas automatizadas" },
+      { value: 100, suffix: "%", label: "feito por mim, ponta a ponta" },
+    ],
+    flow: {
+      nodes: [
+        { id: "user", label: "Comprador", sub: "upload", kind: "user", col: 0, row: 0 },
+        { id: "front", label: "Front React", sub: "XML da NF-e", kind: "front", col: 1, row: 0 },
+        { id: "api", label: "API Go", sub: "parse · CSV", kind: "service", col: 2, row: 0 },
+        { id: "erp", label: "ERP Oracle", sub: "EAN → código", kind: "data", col: 2, row: 1.4 },
+        { id: "pg", label: "PostgreSQL", sub: "histórico", kind: "data", col: 3, row: 1.4 },
+        { id: "ftp", label: "FTP Zukkin", sub: "plataforma", kind: "external", col: 4, row: 0 },
+      ],
+      edges: [
+        { from: "user", to: "front" },
+        { from: "front", to: "api" },
+        { from: "api", to: "erp", label: "lookup" },
+        { from: "api", to: "pg" },
+        { from: "api", to: "ftp", label: "CSV" },
+      ],
+    },
+    featured: false,
   },
-  {
-    slug: "wikivila",
-    title: "WikiVila — Base de Conhecimento Interna",
-    description:
-      "Wiki interna estilo Notion para a Vila Nova: setores, permissões granulares, busca full-text e edição colaborativa.",
-    longDescription:
-      "Base de conhecimento interna da Vila Nova para acabar com documentação dispersa e sem controle de acesso. Organiza conteúdo por setores, com permissões granulares por documento, comentários, favoritos e busca full-text em português. Backend em Go servindo API REST e a SPA Nuxt no mesmo container; PostgreSQL com extensões de busca; autenticação via Keycloak (OIDC) compartilhado entre os sistemas internos.",
-    role: "Desenvolvedor Full Stack",
-    company: "Grupo Vila Nova",
-    period: "2026 – presente",
-    tags: ["Go", "chi", "PostgreSQL", "Nuxt 4", "Keycloak", "TipTap", "Docker"],
-    screenshots: [
-      "/projects/enterprise/wikivila/wikivila_001.jpg",
-    ],
-    highlights: [
-      "Migração de auth caseiro (JWT + bcrypt) para Keycloak/OIDC em produção, sem perder dados",
-      "Busca full-text em português com tsvector ponderado + fuzzy matching trigram (pg_trgm)",
-      "Editor rich-text (TipTap) com lock de edição por documento para evitar conflito de escrita",
-    ],
-    featured: true,
-  },
-  {
-    slug: "vtex-focomix",
-    title: "Loja VTEX Focomix — Storefront Headless B2B",
-    description:
-      "Storefront headless B2B da Focomix sobre a plataforma VTEX — front próprio consumindo as APIs de catálogo e checkout.",
-    longDescription:
-      "Loja B2B da Focomix rodando sobre a VTEX, mas sem usar Store Framework: um frontend headless próprio em React/Vite que consome diretamente as APIs de catálogo e checkout da VTEX, mantendo checkout e login nativos por compliance de pagamento. Inclui fluxo de Call Center onde atendentes impersonam clientes B2B para montar pedidos, e um pipeline de integração que alimenta o catálogo/preço/estoque a partir do ERP Oracle.",
-    role: "Desenvolvedor Full Stack",
-    company: "Grupo Vila Nova",
-    period: "2025 – presente",
-    tags: ["React 19", "Vite", "TypeScript", "Tailwind 4", "VTEX IO", "VTEX API", "Node.js"],
-    screenshots: [
-      "/projects/enterprise/vtex-focomix/focomix_001.jpg",
-      "/projects/enterprise/vtex-focomix/focomix_002.jpg",
-    ],
-    highlights: [
-      "Front headless full-custom consumindo as APIs de catálogo/checkout da VTEX — controle total de UX",
-      "Fluxo de Call Center com SSO cross-domain via JWT assinado para impersonação de clientes B2B",
-      "Pipeline de integração ERP Oracle → RabbitMQ → VTEX (multi-loja) via serviço Laravel dedicado",
-    ],
-    featured: true,
-  },
-];
-
-export const personalProjects: Project[] = [
   {
     slug: "pokedex",
     title: "Pokédex",
-    description:
-      "Aplicação web para pesquisar Pokémons por nome, habitat ou tipo, consumindo a PokéAPI.",
-    longDescription:
-      "Projeto pessoal desenvolvido em ASP.NET Core MVC (.NET 6) para explorar a PokéAPI de forma interativa. Permite buscar Pokémons por nome ou ID, listar por habitat (cave, forest, sea, etc.) e filtrar por tipo (fire, water, grass, etc.), com paginação nos resultados e layout responsivo via Bootstrap. A aplicação roda com Docker sem precisar de .NET instalado localmente.",
+    shortTitle: "Pokédex",
+    category: "personal",
+    description: "Busca de Pokémons por nome, habitat ou tipo, consumindo a PokéAPI.",
+    problem: "Projeto de estudo para explorar ASP.NET Core MVC consumindo uma API pública de verdade.",
+    solution:
+      "App MVC em .NET 6 com busca por nome/ID, filtros por habitat e tipo e paginação, rodando em Docker sem precisar do .NET instalado.",
     role: "Desenvolvedor",
     company: "Projeto pessoal",
     period: "Set 2025 – Abr 2026",
+    status: "Publicado",
+    accent: "amber",
     tags: ["C#", ".NET 6", "ASP.NET Core MVC", "PokéAPI", "Bootstrap", "Docker"],
     screenshots: [
       "/projects/personal/pokedex/pokedex_001.png",
@@ -112,54 +533,78 @@ export const personalProjects: Project[] = [
       "/projects/personal/pokedex/pokedex_004.png",
     ],
     highlights: [
-      "Busca de Pokémon por nome ou ID com listagem paginada",
+      "Busca por nome ou ID com listagem paginada",
       "Filtros por habitat e tipo consumindo endpoints da PokéAPI",
-      "Containerizado com Docker — sem dependência de .NET local para rodar",
+      "Containerizado: sobe com um comando Docker",
     ],
-    featured: true,
+    metrics: [
+      { value: 3, label: "modos de busca" },
+      { value: 1, label: "comando para rodar" },
+    ],
+    flow: {
+      nodes: [
+        { id: "user", label: "Treinador", sub: "navegador", kind: "user", col: 0, row: 0 },
+        { id: "mvc", label: "ASP.NET MVC", sub: ".NET 6 · Docker", kind: "service", col: 1, row: 0 },
+        { id: "api", label: "PokéAPI", sub: "REST pública", kind: "external", col: 2, row: 0 },
+      ],
+      edges: [
+        { from: "user", to: "mvc" },
+        { from: "mvc", to: "api" },
+      ],
+    },
+    featured: false,
     repositoryUrl: "https://github.com/LuizColombo/pokedex",
   },
   {
     slug: "blockchain-api",
     title: "BlockchainApi",
-    description:
-      "Interface simples para consultar carteiras e transações usando dados públicos da Blockchain.com.",
-    longDescription:
-      "Projeto pessoal em HTML, CSS e JavaScript para consultar um endereço de carteira, buscar dados na Blockchain.com e exibir transações associadas de forma direta no navegador. A aplicação não possui backend separado: a lógica fica no frontend, com chamadas à API, exibição dos resultados e tratamento básico para casos como endereço inválido ou ausência de transações.",
+    shortTitle: "BlockchainApi",
+    category: "personal",
+    description: "Consulta carteiras e transações com dados públicos da Blockchain.com, direto no navegador.",
+    problem: "Entender na prática como consumir dados públicos de blockchain sem infraestrutura própria.",
+    solution:
+      "App estático em HTML, CSS e JavaScript que consulta a Blockchain.com, lista as transações da carteira e trata endereço inválido ou sem movimentação. Deploy no GitHub Pages.",
     role: "Desenvolvedor",
     company: "Projeto pessoal",
     period: "2024",
+    status: "Publicado",
+    accent: "cyan",
     tags: ["HTML", "CSS", "JavaScript", "Blockchain.com API", "GitHub Pages"],
     screenshots: [
       "/projects/personal/blockchain-api/blockchain_001.png",
       "/projects/personal/blockchain-api/blockchain_002.png",
     ],
     highlights: [
-      "Consulta de dados de carteiras a partir de um wallet address informado pelo usuário",
-      "Listagem de transações associadas ao endereço pesquisado",
-      "Aplicação estática com deploy via GitHub Pages e sem backend separado",
+      "Consulta de carteira a partir do endereço informado",
+      "Listagem das transações associadas",
+      "Sem backend: deploy estático no GitHub Pages",
     ],
-    featured: true,
+    metrics: [
+      { value: 0, label: "servidores próprios" },
+      { value: 100, suffix: "%", label: "client-side" },
+    ],
+    flow: {
+      nodes: [
+        { id: "user", label: "Usuário", sub: "endereço", kind: "user", col: 0, row: 0 },
+        { id: "app", label: "App estático", sub: "GitHub Pages", kind: "front", col: 1, row: 0 },
+        { id: "api", label: "Blockchain.com", sub: "API pública", kind: "external", col: 2, row: 0 },
+      ],
+      edges: [
+        { from: "user", to: "app" },
+        { from: "app", to: "api" },
+      ],
+    },
+    featured: false,
     repositoryUrl: "https://github.com/LuizColombo/BlockchainApi",
     demoUrl: "https://luizcolombo.github.io/BlockchainApi/",
   },
 ];
 
-export const projectGroups: ProjectGroup[] = [
-  {
-    id: "personal",
-    title: "Projetos pessoais",
-    description:
-      "Experimentos, produtos próprios e estudos que viram ferramenta de verdade.",
-    projects: personalProjects,
-  },
-  {
-    id: "enterprise",
-    title: "Projetos de empresa",
-    description:
-      "Soluções criadas em ambiente profissional, com contexto de negócio, integrações e operação real.",
-    projects: enterpriseProjects,
-  },
-];
+export const categoryLabels: Record<ProjectCategory, string> = {
+  enterprise: "Empresa",
+  personal: "Pessoal",
+};
 
-export const projects: Project[] = [...personalProjects, ...enterpriseProjects];
+export function getProjectBySlug(slug: string): Project | undefined {
+  return projects.find((project) => project.slug === slug);
+}
