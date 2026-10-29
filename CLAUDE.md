@@ -83,8 +83,11 @@ npm run lint         # lint
 
 ## Deploy Cloudflare Pages
 
-Build command: `npm run build`
-Output directory: `.next`
-Node version: 20+
-Instalar adapter: `npm i @cloudflare/next-on-pages`
-Adicionar no `next.config.ts`: `experimental: { runtime: 'edge' }` se necessário.
+Site 100% estático (`output: "export"` no `next.config.ts`) — sem adapter, sem edge runtime.
+
+- Build command (painel da Cloudflare): `npm run build`
+- Output directory: `out` (definido no `wrangler.toml`, `pages_build_output_dir`)
+- Push na `main` = deploy automático.
+- Toda rota dinâmica precisa de `generateStaticParams` + `dynamicParams = false`; nada de route handler, cookies, headers ou Server Actions.
+- Imagens: `images.unoptimized` (sem servidor não há otimização do Next).
+- Testar como em produção: `npm run build && npx wrangler pages dev out`.
