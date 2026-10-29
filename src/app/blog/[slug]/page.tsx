@@ -1,9 +1,13 @@
-export const runtime = "edge";
-
 import Link from "next/link";
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import { notFound } from "next/navigation";
-import { getPostBySlug } from "@/content/posts";
+import { getPostBySlug, posts } from "@/content/posts";
+
+export const dynamicParams = false;
+
+export function generateStaticParams() {
+  return posts.map((post) => ({ slug: post.slug }));
+}
 
 export default async function PostPage({
   params,
