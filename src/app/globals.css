@@ -57,3 +57,16 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--accent);
 }
+
+/* React Flow no tema do site (diagramas de arquitetura dos cases) */
+.react-flow {
+  --xy-background-color: transparent;
+}
+
+.react-flow__attribution {
+  background: transparent;
+}
+
+.react-flow__attribution a {
+  color: #475569;
+}
