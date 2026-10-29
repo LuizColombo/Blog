@@ -21,6 +21,7 @@ src/
 ├── app/
 │   ├── layout.tsx              # metadata SEO pt-BR
 │   ├── page.tsx                # home single-page (Navbar + 5 seções + Footer)
+│   ├── projetos/[slug]/page.tsx # case study estático (generateStaticParams, dynamicParams=false)
 │   ├── globals.css             # dark theme, CSS vars, scrollbar custom
 │   └── blog/
 │       ├── page.tsx            # lista de posts
@@ -29,16 +30,17 @@ src/
 │   ├── layout/
 │   │   ├── Navbar.tsx          # sticky blur, mobile menu animado
 │   │   └── Footer.tsx
+│   ├── projects/               # CaseStudy, FlowDiagram (React Flow), MiniFlow (SVG), MetricChart, AnimatedCounter
 │   ├── sections/
 │   │   ├── Hero.tsx            # stagger animation, gradient blobs, grid overlay
 │   │   ├── About.tsx           # skills 4 cards, scroll reveal
-│   │   ├── Projects.tsx        # carrossel screenshots + highlights + tags
+│   │   ├── Projects.tsx        # bento grid + filtro; card leva ao case
 │   │   ├── Blog.tsx            # preview 3 posts recentes
 │   │   └── Contact.tsx         # social links + form
 │   └── ui/
 │       └── BrandIcons.tsx      # GitHubIcon, LinkedInIcon (SVG direto)
 ├── content/projects/
-│   └── example-project.ts      # array de Project[] — editar com projetos reais
+│   └── index.ts                # Project[] — problema/solução, métricas, gráfico e fluxo (React Flow)
 └── types/index.ts              # interfaces Project e Post
 ```
 
@@ -71,7 +73,7 @@ npm run lint         # lint
 
 ## Conteúdo a personalizar
 
-1. `src/content/projects/example-project.ts` — substituir projetos de exemplo pelos reais
+1. `src/content/projects/index.ts` — projetos (cada um com `flow`, `metrics` e `chart` opcional)
 2. `public/projects/<slug>/` — screenshots dos projetos (formato `.png`)
 3. `src/components/sections/Hero.tsx` — nome, título, bio
 4. `src/components/sections/About.tsx` — skills reais, bio longa
